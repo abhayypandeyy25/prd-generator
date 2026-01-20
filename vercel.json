@@ -5,11 +5,89 @@
   "framework": "vite",
   "functions": {
     "api/**/*.py": {
-      "runtime": "@vercel/python@4.3.1"
+      "runtime": "@vercel/python@4.3.1",
+      "maxDuration": 60
     }
   },
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    {
+      "src": "/api/context/upload/(.*)",
+      "dest": "/api/context/upload/[project_id].py"
+    },
+    {
+      "src": "/api/context/file/(.*)",
+      "dest": "/api/context/file/[file_id].py"
+    },
+    {
+      "src": "/api/context/text/(.*)",
+      "dest": "/api/context/text/[project_id].py"
+    },
+    {
+      "src": "/api/context/([^/]+)$",
+      "dest": "/api/context/[project_id].py"
+    },
+    {
+      "src": "/api/questions/prefill/(.*)",
+      "dest": "/api/questions/prefill/[project_id].py"
+    },
+    {
+      "src": "/api/questions/responses/(.*)",
+      "dest": "/api/questions/responses/[project_id].py"
+    },
+    {
+      "src": "/api/questions/response/([^/]+)/([^/]+)",
+      "dest": "/api/questions/response/[project_id]/[question_id].py"
+    },
+    {
+      "src": "/api/questions/confirm/([^/]+)/([^/]+)",
+      "dest": "/api/questions/confirm/[project_id]/[question_id].py"
+    },
+    {
+      "src": "/api/questions/stats/(.*)",
+      "dest": "/api/questions/stats/[project_id].py"
+    },
+    {
+      "src": "/api/questions$",
+      "dest": "/api/questions.py"
+    },
+    {
+      "src": "/api/prd/generate/(.*)",
+      "dest": "/api/prd/generate/[project_id].py"
+    },
+    {
+      "src": "/api/prd/preview/(.*)",
+      "dest": "/api/prd/preview/[project_id].py"
+    },
+    {
+      "src": "/api/prd/export/md/(.*)",
+      "dest": "/api/prd/export/md/[project_id].py"
+    },
+    {
+      "src": "/api/prd/export/docx/(.*)",
+      "dest": "/api/prd/export/docx/[project_id].py"
+    },
+    {
+      "src": "/api/prd/([^/]+)$",
+      "dest": "/api/prd/[project_id].py"
+    },
+    {
+      "src": "/api/projects/([^/]+)$",
+      "dest": "/api/projects/[id].py"
+    },
+    {
+      "src": "/api/projects$",
+      "dest": "/api/projects.py"
+    },
+    {
+      "src": "/api/index$",
+      "dest": "/api/index.py"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }
