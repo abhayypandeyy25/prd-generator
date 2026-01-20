@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
@@ -41,21 +41,33 @@ def create_app():
     app.config['SUPABASE_KEY'] = os.getenv('SUPABASE_KEY')
     app.config['ANTHROPIC_API_KEY'] = os.getenv('ANTHROPIC_API_KEY')
 
-    # Register blueprints
-    from app.routes.context import context_bp
-    from app.routes.questions import questions_bp
-    from app.routes.prd import prd_bp
-    from app.routes.projects import projects_bp
-
-    app.register_blueprint(context_bp, url_prefix='/api/context')
-    app.register_blueprint(questions_bp, url_prefix='/api/questions')
-    app.register_blueprint(prd_bp, url_prefix='/api/prd')
-    app.register_blueprint(projects_bp, url_prefix='/api/projects')
-
-    # Health check endpoint
+    # Health check endpoint - register BEFORE blueprints to ensure it always works
     @app.route('/api/health')
     def health_check():
-        return {'status': 'healthy', 'service': 'pm-clarity'}
+        supabase_configured = bool(os.getenv('SUPABASE_URL') and os.getenv('SUPABASE_KEY'))
+        anthropic_configured = bool(os.getenv('ANTHROPIC_API_KEY'))
+        return jsonify({
+            'status': 'healthy',
+            'service': 'pm-clarity',
+            'config': {
+                'supabase': supabase_configured,
+                'anthropic': anthropic_configured
+            }
+        })
+
+    # Register blueprints
+    try:
+        from app.routes.context import context_bp
+        from app.routes.questions import questions_bp
+        from app.routes.prd import prd_bp
+        from app.routes.projects import projects_bp
+
+        app.register_blueprint(context_bp, url_prefix='/api/context')
+        app.register_blueprint(questions_bp, url_prefix='/api/questions')
+        app.register_blueprint(prd_bp, url_prefix='/api/prd')
+        app.register_blueprint(projects_bp, url_prefix='/api/projects')
+    except Exception as e:
+        print(f"Warning: Could not register all blueprints: {e}")
 
     # Serve frontend in production
     if os.path.exists(static_folder):
