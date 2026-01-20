@@ -7,13 +7,22 @@ projects_bp = Blueprint('projects', __name__)
 @projects_bp.route('', methods=['POST'])
 def create_project():
     """Create a new project"""
-    data = request.get_json()
-    name = data.get('name', 'Untitled Project')
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No JSON data provided'}), 400
 
-    project = supabase_service.create_project(name)
-    if project:
-        return jsonify(project), 201
-    return jsonify({'error': 'Failed to create project'}), 500
+        name = data.get('name', '').strip()
+        if not name:
+            return jsonify({'error': 'Project name is required'}), 400
+
+        project = supabase_service.create_project(name)
+        if project:
+            return jsonify(project), 201
+        return jsonify({'error': 'Failed to create project - no data returned from database'}), 500
+    except Exception as e:
+        print(f"Error creating project: {e}")
+        return jsonify({'error': f'Failed to create project: {str(e)}'}), 500
 
 
 @projects_bp.route('', methods=['GET'])

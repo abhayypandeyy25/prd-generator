@@ -8,8 +8,13 @@ class SupabaseService:
 
     # Projects
     def create_project(self, name: str) -> dict:
-        result = self.client.table('projects').insert({'name': name}).execute()
-        return result.data[0] if result.data else None
+        try:
+            result = self.client.table('projects').insert({'name': name}).execute()
+            print(f"Supabase create_project result: {result}")
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Supabase create_project error: {e}")
+            raise
 
     def get_project(self, project_id: str) -> dict:
         result = self.client.table('projects').select('*').eq('id', project_id).execute()
