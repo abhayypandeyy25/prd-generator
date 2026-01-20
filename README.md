@@ -127,7 +127,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-The backend will run on `http://localhost:5000`
+The backend will run on `http://localhost:5001`
 
 ### 5. Frontend Setup
 
@@ -225,6 +225,53 @@ pm-clarity/
 - `GET /api/prd/:projectId` - Get PRD
 - `GET /api/prd/:projectId/export/md` - Export Markdown
 - `GET /api/prd/:projectId/export/docx` - Export Word
+
+## Deployment to Railway
+
+Railway provides easy deployment for full-stack applications. Follow these steps:
+
+### 1. Prerequisites
+
+- Railway account (https://railway.app)
+- GitHub repository with this code
+
+### 2. Deploy Steps
+
+1. **Push to GitHub**: Push your code to a GitHub repository
+
+2. **Create Railway Project**:
+   - Go to https://railway.app/new
+   - Click "Deploy from GitHub repo"
+   - Select your pm-clarity repository
+
+3. **Configure Environment Variables**:
+   In Railway dashboard, go to your service → Variables and add:
+   ```
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_KEY=your-supabase-anon-key
+   ANTHROPIC_API_KEY=your-anthropic-api-key
+   FLASK_ENV=production
+   ```
+
+4. **Deploy**:
+   - Railway will automatically detect the Dockerfile and build
+   - Wait for the deployment to complete (usually 2-3 minutes)
+
+5. **Get Your URL**:
+   - Go to Settings → Networking → Generate Domain
+   - Your app will be available at `https://your-app.railway.app`
+
+### 3. Verify Deployment
+
+- Visit your Railway URL
+- Check `/api/health` endpoint returns `{"status": "healthy"}`
+- Create a test project and upload a file
+
+### Troubleshooting
+
+- **Build fails**: Check the build logs in Railway dashboard
+- **502 errors**: Ensure all environment variables are set correctly
+- **File upload fails**: Verify Supabase storage bucket `context-files` exists and is accessible
 
 ## Credits
 
