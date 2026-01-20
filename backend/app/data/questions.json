@@ -1,0 +1,1177 @@
+{
+  "sections": [
+    {
+      "id": "1",
+      "title": "Part 1: Problem & Opportunity Definition",
+      "subsections": [
+        {
+          "id": "1.1",
+          "title": "The Problem Statement",
+          "questions": [
+            {
+              "id": "1.1.1",
+              "question": "What is the struggling moment that causes demand for this solution?",
+              "hint": "The specific situation where people feel enough pain to seek change",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.2",
+              "question": "Who specifically has this problem?",
+              "hint": "Be precise about the person, their role, and context",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.3",
+              "question": "What context are they in when they experience this problem?",
+              "hint": "Where are they? What are they trying to accomplish? What's happening around them?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.4",
+              "question": "What outcome do they want?",
+              "hint": "Not features—the end state they're seeking",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.5",
+              "question": "What's pushing them away from their current situation? (Push Force F1)",
+              "hint": "Four Forces Analysis - Bob Moesta",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.6",
+              "question": "What's attracting them toward a new solution? (Pull Force F2)",
+              "hint": "Four Forces Analysis - Bob Moesta",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.7",
+              "question": "What worries them about trying something new? (Anxiety Force F3)",
+              "hint": "Four Forces Analysis - Bob Moesta",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.8",
+              "question": "What habits keep them doing things the old way? (Habit Force F4)",
+              "hint": "Four Forces Analysis - Bob Moesta",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.9",
+              "question": "If Push + Pull is NOT greater than Anxiety + Habit, what will you do to tip the balance?",
+              "hint": "Critical Check for switching behavior",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "1.1.10",
+              "question": "Have you talked to 10-20 people who have actually tried to make progress in this area?",
+              "type": "checkbox",
+              "options": ["Yes, I've conducted interviews", "No, I need to do this first"],
+              "required": true
+            },
+            {
+              "id": "1.1.11",
+              "question": "When you describe the problem to potential users, do they show strong signals?",
+              "type": "multiselect",
+              "options": [
+                "Interrupt and give their own description (Strong signal)",
+                "Show emotional engagement (Strong signal)",
+                "Say 'I know someone who has that problem' (Weak signal)",
+                "Politely agree but don't elaborate (Weak signal)"
+              ],
+              "required": true
+            },
+            {
+              "id": "1.1.12",
+              "question": "What do people currently do to solve this problem?",
+              "hint": "Even if it's crappy, inefficient, or manual",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "1.1.13",
+              "question": "What will people STOP using/doing when they adopt your solution?",
+              "hint": "This reveals your true competitive set",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "1.2",
+          "title": "Problem Magnitude & Urgency",
+          "questions": [
+            {
+              "id": "1.2.1",
+              "question": "How often does this problem occur? (Frequency) Rate 1-10",
+              "type": "number",
+              "min": 1,
+              "max": 10,
+              "required": true
+            },
+            {
+              "id": "1.2.2",
+              "question": "How painful is it when the problem occurs? (Intensity) Rate 1-10",
+              "type": "number",
+              "min": 1,
+              "max": 10,
+              "required": true
+            },
+            {
+              "id": "1.2.3",
+              "question": "How many people are affected? (Breadth) Rate 1-10",
+              "type": "number",
+              "min": 1,
+              "max": 10,
+              "required": true
+            },
+            {
+              "id": "1.2.4",
+              "question": "Would they pay to solve it? (Willingness to pay) Rate 1-10",
+              "type": "number",
+              "min": 1,
+              "max": 10,
+              "required": true
+            },
+            {
+              "id": "1.2.5",
+              "question": "Is this problem being measured or managed today by the target customer?",
+              "type": "checkbox",
+              "options": ["Yes—it's already a priority they track", "No—we'll need to create awareness first"],
+              "required": true
+            },
+            {
+              "id": "1.2.6",
+              "question": "Is the problem growing and widening, or stable/shrinking?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "1.3",
+          "title": "Red Flags Checklist",
+          "questions": [
+            {
+              "id": "1.3.1",
+              "question": "Red flags review - check any that apply",
+              "type": "multiselect",
+              "options": [
+                "You're sitting in a conference room hypothesizing the problem (not talking to users)",
+                "You're describing pain/gain instead of context/outcome",
+                "The problem statement sounds like a solution in disguise",
+                "People complain about it but haven't tried to change",
+                "You can't describe the problem in specific, solvable terms",
+                "Your best users are requesting it (might destroy the core product)"
+              ],
+              "required": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Part 2: Target User & Customer Understanding",
+      "subsections": [
+        {
+          "id": "2.1",
+          "title": "Target User Definition",
+          "questions": [
+            {
+              "id": "2.1.1",
+              "question": "Who would be 'very disappointed' if they could no longer use your product?",
+              "hint": "The Sean Ellis PMF question—this is your core user",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.1.2",
+              "question": "What are the characteristics that make someone your ideal user? (Role/Job Title)",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "2.1.3",
+              "question": "What are the characteristics that make someone your ideal user? (Company Size/Stage)",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "2.1.4",
+              "question": "What are the characteristics that make someone your ideal user? (Industry)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "2.1.5",
+              "question": "What are the characteristics that make someone your ideal user? (Technical Sophistication)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "2.1.6",
+              "question": "What are the characteristics that make someone your ideal user? (Current Behavior/Workflow)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.1.7",
+              "question": "What are the characteristics that make someone your ideal user? (Budget Authority)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "2.1.8",
+              "question": "What job are they hiring your product to do? (Frame as: When _____, I want to _____, so I can _____)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.1.9",
+              "question": "Who is the User vs. the Buyer vs. the Signer? (B2B only) - Describe User",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "2.1.10",
+              "question": "Who is the User vs. the Buyer vs. the Signer? (B2B only) - Describe Buyer",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "2.1.11",
+              "question": "Who is the User vs. the Buyer vs. the Signer? (B2B only) - Describe Signer",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "2.1.12",
+              "question": "Who is the User vs. the Buyer vs. the Signer? (B2B only) - Describe Influencer",
+              "type": "textarea",
+              "required": false
+            }
+          ]
+        },
+        {
+          "id": "2.2",
+          "title": "User Research Validation",
+          "questions": [
+            {
+              "id": "2.2.1",
+              "question": "Have you talked to recent switchers (3-6 months)?",
+              "hint": "They remember life before AND after",
+              "type": "checkbox",
+              "options": ["Yes", "No—need to do this"],
+              "required": true
+            },
+            {
+              "id": "2.2.2",
+              "question": "What was their struggling moment?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.2.3",
+              "question": "What did they try before finding you?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.2.4",
+              "question": "What does success look like for them?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.2.5",
+              "question": "What do users actually DO vs. what they SAY they want? (What They Say)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.2.6",
+              "question": "What do users actually DO vs. what they SAY they want? (What They Actually Do)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "2.2.7",
+              "question": "What specific behavior are you trying to change?",
+              "hint": "Be precise: not 'save money' but 'transfer $X to savings account on Y date'",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Part 3: Market & Competitive Landscape",
+      "subsections": [
+        {
+          "id": "3.1",
+          "title": "Market Opportunity",
+          "questions": [
+            {
+              "id": "3.1.1",
+              "question": "What are customers doing today to solve this problem?",
+              "hint": "Include status quo, workarounds, and direct competitors",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.2",
+              "question": "Who else lands on the customer's shortlist? List competitors/alternatives",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.3",
+              "question": "For each competitor: Why do customers choose them?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.4",
+              "question": "For each competitor: Why would customers choose us instead?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.5",
+              "question": "Competitive Alternatives - What do we beat to win? (April Dunford)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.6",
+              "question": "Differentiated Capabilities - What do we have they don't?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.7",
+              "question": "Differentiated Value - So what for the customer?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.8",
+              "question": "Best-Fit Customers - Who cares most about this value?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.1.9",
+              "question": "Market Category - What context makes value obvious?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "3.2",
+          "title": "Strategic Fit",
+          "questions": [
+            {
+              "id": "3.2.1",
+              "question": "Does this align with your company's 'crown jewels'—what you're genuinely best at?",
+              "type": "checkbox",
+              "options": ["Yes, directly", "Somewhat adjacent", "No, this is a stretch"],
+              "required": true
+            },
+            {
+              "id": "3.2.2",
+              "question": "Where does this fit in your company's strategy?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.2.3",
+              "question": "What is our winning aspiration? (Roger Martin)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.2.4",
+              "question": "Where will we play? (geography, customers, channels)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.2.5",
+              "question": "How will we win? (differentiation OR low cost)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.2.6",
+              "question": "What capabilities must we have?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.2.7",
+              "question": "What management systems are required?",
+              "type": "textarea",
+              "required": false
+            }
+          ]
+        },
+        {
+          "id": "3.3",
+          "title": "Timing & Market Readiness",
+          "questions": [
+            {
+              "id": "3.3.1",
+              "question": "Are customers asking for solutions like this, or do you need to educate them?",
+              "type": "checkbox",
+              "options": ["Pull: Customers are actively seeking solutions", "Push: We need to create awareness/demand"],
+              "required": true
+            },
+            {
+              "id": "3.3.2",
+              "question": "Is there a 'compelling reason to buy NOW' vs. later?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "3.3.3",
+              "question": "What technology or market shifts make this possible/necessary now?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Part 4: Solution Design & Vision",
+      "subsections": [
+        {
+          "id": "4.1",
+          "title": "Solution Approach",
+          "questions": [
+            {
+              "id": "4.1.1",
+              "question": "What is your proposed solution at a high level?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.1.2",
+              "question": "What alternative approaches did you consider?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.1.3",
+              "question": "Why were alternatives rejected?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.1.4",
+              "question": "What would it take to 10x this idea?",
+              "hint": "Force different thinking—don't anchor on first solution",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "4.1.5",
+              "question": "Are you building this because competitors do it, or because you derived it from first principles?",
+              "type": "checkbox",
+              "options": ["First principles", "Competitive response", "Customer request"],
+              "required": true
+            },
+            {
+              "id": "4.1.6",
+              "question": "What assumptions are you making that may no longer be true?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "4.2",
+          "title": "User Experience Vision",
+          "questions": [
+            {
+              "id": "4.2.1",
+              "question": "Does this solve the problem? Is the core valuable? (Julie Zhuo - Level 1 Value)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.2.2",
+              "question": "Can people access the value easily? (Julie Zhuo - Level 2 Ease of Use)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.2.3",
+              "question": "Does it exceed expectations? (Julie Zhuo - Level 3 Delight)",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "4.2.4",
+              "question": "What is the 'aha moment'—when do users first experience the magic?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.2.5",
+              "question": "What is the time to value? How quickly can users experience the special sauce?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.2.6",
+              "question": "Will this make users think? Will it make them feel stupid?",
+              "type": "checkbox",
+              "options": ["No, it's intuitive", "Needs work here"],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "4.3",
+          "title": "Scope & MVP",
+          "questions": [
+            {
+              "id": "4.3.1",
+              "question": "What is the minimum feature set to prove this can work?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.3.2",
+              "question": "What are you explicitly NOT building in V1?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.3.3",
+              "question": "Which 20% of features will drive 80% of the value/willingness to pay?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.3.4",
+              "question": "Does it work? (Provides value proposition) - Katie Dill Quality Level 1",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "4.3.5",
+              "question": "Does it work exceedingly well? (Error-free, polished) - Katie Dill Quality Level 2",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "4.3.6",
+              "question": "Does it exceed expectations? (Delightful) - Katie Dill Quality Level 3",
+              "type": "textarea",
+              "required": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Part 5: Success Metrics & Validation",
+      "subsections": [
+        {
+          "id": "5.1",
+          "title": "Defining Success",
+          "questions": [
+            {
+              "id": "5.1.1",
+              "question": "What is your North Star metric for this initiative?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.1.2",
+              "question": "How will you know if you've actually solved the problem?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.1.3",
+              "question": "What are your leading indicators (early signals)?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.1.4",
+              "question": "What are your lagging indicators (confirms success)?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.1.5",
+              "question": "What could go wrong? What metrics should NOT get worse? (Guardrail Metrics)",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "5.2",
+          "title": "Product-Market Fit Validation",
+          "questions": [
+            {
+              "id": "5.2.1",
+              "question": "What percentage of users would be 'very disappointed' without this?",
+              "hint": "Sean Ellis threshold: 40%+ = strong PMF signal",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "5.2.2",
+              "question": "What does retention look like? (Day 1 target)",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "5.2.3",
+              "question": "What does retention look like? (Day 7 target)",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "5.2.4",
+              "question": "What does retention look like? (Day 30 target)",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "5.2.5",
+              "question": "What does retention look like? (Day 90 target)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "5.2.6",
+              "question": "What will make users come back?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "5.3",
+          "title": "Experiment Design",
+          "questions": [
+            {
+              "id": "5.3.1",
+              "question": "What is your hypothesis? (If we [do X], then [Y metric] will [improve by Z] because [reason])",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.3.2",
+              "question": "What would make you abandon this idea? (Define kill criteria upfront)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "5.3.3",
+              "question": "What is the cheapest test you can run before building?",
+              "type": "multiselect",
+              "options": ["Fake door test", "Wizard of Oz", "Smoke test / landing page", "Manual version", "Prototype", "Other"],
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "title": "Part 6: Pricing & Business Model",
+      "subsections": [
+        {
+          "id": "6.1",
+          "title": "Willingness to Pay",
+          "questions": [
+            {
+              "id": "6.1.1",
+              "question": "Have you validated that customers will pay for this?",
+              "type": "checkbox",
+              "options": ["Yes, through conversations", "No—need to do this"],
+              "required": true
+            },
+            {
+              "id": "6.1.2",
+              "question": "What would customers consider an acceptable price?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "6.1.3",
+              "question": "What would they consider expensive but fair?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "6.1.4",
+              "question": "What would be prohibitively expensive?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "6.1.5",
+              "question": "Can customers articulate the benefit they get (not just features)?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "6.1.6",
+              "question": "What is the ROI for the customer? (Time saved)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "6.1.7",
+              "question": "What is the ROI for the customer? (Money saved)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "6.1.8",
+              "question": "What is the ROI for the customer? (Revenue generated)",
+              "type": "text",
+              "required": false
+            },
+            {
+              "id": "6.1.9",
+              "question": "What is the ROI for the customer? (Risk reduced)",
+              "type": "text",
+              "required": false
+            }
+          ]
+        },
+        {
+          "id": "6.2",
+          "title": "Packaging & Bundling",
+          "questions": [
+            {
+              "id": "6.2.1",
+              "question": "List your features and classify them as Leader (>50% need), Filler (nice to have), or Killer (10-20% want badly)",
+              "hint": "From Madhavan Ramanujam: Leaders are your Big Mac, Fillers add value to bundle, Killers sell as add-ons",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "6.2.2",
+              "question": "What pricing model fits best?",
+              "type": "checkbox",
+              "options": ["Subscription (predictable, simple)", "Usage-based (low commitment, transparent)", "Hybrid (seat + consumption)", "Outcome-based (charge for results)"],
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Part 7: Execution & Prioritization",
+      "subsections": [
+        {
+          "id": "7.1",
+          "title": "Prioritization",
+          "questions": [
+            {
+              "id": "7.1.1",
+              "question": "Is this the BEST use of our time, or just a GOOD use?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.1.2",
+              "question": "What is the opportunity cost? What are we NOT doing if we do this?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.1.3",
+              "question": "Shreyas Doshi's LNO Framework - What % of time on Leverage (10x impact) tasks?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "7.1.4",
+              "question": "Shreyas Doshi's LNO Framework - What % of time on Neutral (expected work) tasks?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "7.1.5",
+              "question": "Shreyas Doshi's LNO Framework - What % of time on Overhead (necessary but low-value) tasks?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "7.1.6",
+              "question": "Where does this initiative fall?",
+              "type": "checkbox",
+              "options": ["Leverage (10x impact)", "Neutral (expected work)", "Overhead (necessary but low-value)"],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "7.2",
+          "title": "Dependencies & Risks",
+          "questions": [
+            {
+              "id": "7.2.1",
+              "question": "What dependencies exist? (List dependency, owner, status, risk level)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.2.2",
+              "question": "Pre-Mortem: If this fails in 6 months, what went wrong? (Tigers - real threats)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.2.3",
+              "question": "Pre-Mortem: Paper Tigers (things that seem like threats but aren't)",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "7.2.4",
+              "question": "Pre-Mortem: Elephants (things no one's talking about)",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "7.3",
+          "title": "Technical Feasibility",
+          "questions": [
+            {
+              "id": "7.3.1",
+              "question": "Has engineering validated this is buildable?",
+              "type": "checkbox",
+              "options": ["Yes", "No—need to discuss"],
+              "required": true
+            },
+            {
+              "id": "7.3.2",
+              "question": "What is the team's current capacity and what are they committed to?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.3.3",
+              "question": "What infrastructure needs to exist for this to be built quickly?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "7.3.4",
+              "question": "What technical debt will this create?",
+              "type": "textarea",
+              "required": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Part 8: Stakeholder Alignment",
+      "subsections": [
+        {
+          "id": "8.1",
+          "title": "Getting Buy-In",
+          "questions": [
+            {
+              "id": "8.1.1",
+              "question": "Who needs to be aligned before you proceed? (List stakeholder, their interest, concerns, status)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "8.1.2",
+              "question": "Who is the decision-maker?",
+              "hint": "From Claire Hughes Johnson: If you're not sure who the decision maker is, it's probably you.",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "8.1.3",
+              "question": "What are the options? (List Option, Pros, Cons)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "8.1.4",
+              "question": "What is your recommended option?",
+              "type": "text",
+              "required": true
+            },
+            {
+              "id": "8.1.5",
+              "question": "Why this recommendation?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "8.2",
+          "title": "Communication Checklist",
+          "questions": [
+            {
+              "id": "8.2.1",
+              "question": "Communication readiness checklist",
+              "type": "multiselect",
+              "options": [
+                "Is there a canonical document everyone can reference?",
+                "Do we have shared vocabulary (same terms = same meanings)?",
+                "Have I talked to enough people to understand different perspectives?",
+                "Can I explain this at multiple levels (kindergarten to PhD)?",
+                "Do I have a clear story that connects to company goals?"
+              ],
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "title": "Part 9: Go-to-Market Considerations",
+      "subsections": [
+        {
+          "id": "9.1",
+          "title": "Distribution & Launch",
+          "questions": [
+            {
+              "id": "9.1.1",
+              "question": "How will people learn about this?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "9.1.2",
+              "question": "What's the story? (Brian Chesky: You can't build a product unless you know how to talk about it)",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "9.1.3",
+              "question": "What does the demo look like?",
+              "hint": "From Jen Abel: The demo is the only card you control in the sales process.",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "9.2",
+          "title": "Sales Enablement (B2B)",
+          "questions": [
+            {
+              "id": "9.2.1",
+              "question": "Can your sales team explain this without an SE?",
+              "type": "checkbox",
+              "options": ["Yes", "No—need enablement materials"],
+              "required": false
+            },
+            {
+              "id": "9.2.2",
+              "question": "What objections will come up? (List objection and response)",
+              "type": "textarea",
+              "required": false
+            },
+            {
+              "id": "9.2.3",
+              "question": "What collateral is needed?",
+              "type": "multiselect",
+              "options": ["Slide deck", "Demo script", "Discovery questions", "Objection handling guide", "ROI calculator", "Case study"],
+              "required": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Part 10: Final Validation Checklist",
+      "subsections": [
+        {
+          "id": "10.1",
+          "title": "Problem & User Validation",
+          "questions": [
+            {
+              "id": "10.1.1",
+              "question": "Problem & User validation checklist",
+              "type": "multiselect",
+              "options": [
+                "I've talked to 10+ people who have this problem",
+                "I can describe the problem in specific, solvable terms",
+                "I know what they're doing today to solve it",
+                "I understand the context where the problem occurs"
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "10.2",
+          "title": "Market & Strategy Validation",
+          "questions": [
+            {
+              "id": "10.2.1",
+              "question": "Market & Strategy validation checklist",
+              "type": "multiselect",
+              "options": [
+                "I know my competitive alternatives",
+                "I can articulate my differentiated value",
+                "This aligns with company strategy",
+                "I understand the timing/urgency"
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "10.3",
+          "title": "Solution & Scope Validation",
+          "questions": [
+            {
+              "id": "10.3.1",
+              "question": "Solution & Scope validation checklist",
+              "type": "multiselect",
+              "options": [
+                "The solution directly addresses the problem",
+                "I've considered alternative approaches",
+                "Scope is appropriate for learnings needed",
+                "I know what's explicitly out of scope"
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "10.4",
+          "title": "Metrics & Business Validation",
+          "questions": [
+            {
+              "id": "10.4.1",
+              "question": "Metrics & Validation checklist",
+              "type": "multiselect",
+              "options": [
+                "I have clear success metrics",
+                "I have leading and lagging indicators",
+                "I know what would make me abandon this",
+                "I have a plan to validate before full build"
+              ],
+              "required": true
+            },
+            {
+              "id": "10.4.2",
+              "question": "Business & Pricing checklist",
+              "type": "multiselect",
+              "options": [
+                "I've validated willingness to pay",
+                "I understand the business model implications",
+                "I know how this will be priced/packaged"
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "10.5",
+          "title": "Execution & GTM Validation",
+          "questions": [
+            {
+              "id": "10.5.1",
+              "question": "Execution & Alignment checklist",
+              "type": "multiselect",
+              "options": [
+                "Engineering has validated feasibility",
+                "Key stakeholders are aligned",
+                "Dependencies are identified",
+                "I've done a pre-mortem on risks"
+              ],
+              "required": true
+            },
+            {
+              "id": "10.5.2",
+              "question": "Go-to-Market checklist",
+              "type": "multiselect",
+              "options": [
+                "I know how customers will discover this",
+                "I can tell the story of this product",
+                "Sales/marketing has input (if relevant)"
+              ],
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "10.6",
+          "title": "Final Reflection",
+          "questions": [
+            {
+              "id": "10.6.1",
+              "question": "On a scale of 1-10, how confident are you in this opportunity?",
+              "type": "number",
+              "min": 1,
+              "max": 10,
+              "required": true
+            },
+            {
+              "id": "10.6.2",
+              "question": "Why this score?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "10.6.3",
+              "question": "What's the biggest risk you're most worried about?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "10.6.4",
+              "question": "What would change your mind about pursuing this?",
+              "type": "textarea",
+              "required": true
+            },
+            {
+              "id": "10.6.5",
+              "question": "If you could only test one assumption, which would it be?",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
