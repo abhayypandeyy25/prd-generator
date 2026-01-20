@@ -7,7 +7,27 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    CORS(app, origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"])
+
+    # Allow CORS from localhost (dev) and Vercel domains (production)
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+    ]
+
+    # Add Vercel domain from environment variable if set
+    frontend_url = os.getenv('FRONTEND_URL')
+    if frontend_url:
+        allowed_origins.append(frontend_url)
+
+    # Also allow any vercel.app subdomain for preview deployments
+    CORS(app, origins=allowed_origins, supports_credentials=True, resources={
+        r"/api/*": {
+            "origins": allowed_origins,
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
     app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
     app.config['SUPABASE_URL'] = os.getenv('SUPABASE_URL')
