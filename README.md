@@ -1,39 +1,90 @@
-# PM Clarity - PRD Builder
+# PM Clarity - AI-Powered PRD Builder
 
-A web application for Product Managers to gain complete clarity on their product ideas before writing a PRD. Based on 150+ questions distilled from 300+ Lenny's Podcast interviews with world-class product leaders.
+> Transform product ideas into comprehensive PRDs using AI-driven context analysis and 150+ expert questions.
 
-## Features
+**Live App**: https://pm-clarity.vercel.app
 
-- **Context Tab**: Upload emails, docs, meeting notes, voice transcripts, and other context
-- **Questions Tab**: 150 questions organized by 10 sections, with AI-powered prefill from context
-- **PRD Tab**: Auto-generate comprehensive PRD and export to Markdown or Word
+---
 
-## Tech Stack
+## ✨ Features
+
+### Core Functionality
+- **📁 Context Upload**: Upload docs, emails, meeting notes, voice transcripts
+- **🤖 AI Analysis**: Smart context analysis and feature extraction
+- **❓ Guided Questions**: 139 questions organized by 10 sections
+- **✨ AI Prefill**: Auto-fill answers from your context
+- **📄 PRD Generation**: Generate comprehensive PRD from responses
+- **📤 Export**: Download as Markdown or Word (.docx)
+
+### Advanced Features (9 Implemented)
+1. **PRD Editing & Refinement** - Edit generated PRDs inline
+2. **Templates & Customization** - 5 PRD templates (Lean, Enterprise, Technical, etc.)
+3. **Collaboration & Sharing** - Share PRDs with password protection
+4. **Version History** - Track changes and compare versions
+5. **Smart Context Analysis** - Deep AI-powered document analysis
+6. **Adaptive Questioning** - Dynamic follow-up questions
+7. **Stakeholder Views** - Tailored summaries for different roles
+8. **AI Improvement Loop** - Feedback-driven improvements
+9. **Analytics & Insights** - Track metrics and progress
+
+---
+
+## 🚀 Tech Stack
 
 - **Frontend**: Vue.js 3 + Vite + Pinia
-- **Backend**: Python Flask
-- **AI**: Claude API (Anthropic)
+- **Backend**: Python Serverless Functions (Vercel)
+- **AI**: Claude 4.5 Sonnet (Anthropic API)
 - **Database**: Supabase (PostgreSQL + Storage)
+- **Hosting**: Vercel
 - **Export**: Markdown + Word (.docx)
 
-## Prerequisites
+---
+
+## 📚 Documentation
+
+- **[Documentation Hub](docs/README.md)** - Complete documentation index
+- **[Deployment Guide](docs/deployment/MIGRATION_TEMPLATES.md)** - Database setup
+- **[Development Log](docs/DEVELOPMENT_LOG.md)** - Feature development history
+- **[Troubleshooting](docs/troubleshooting/)** - Debug guides and bug fixes
+- **[Test Suite](tests/README.md)** - 115 automated tests
+
+---
+
+## 🏗️ Project Structure
+
+```
+pm-clarity/
+├── api/                  # Serverless API functions
+├── frontend/             # Vue.js application
+├── docs/                 # Documentation
+│   ├── deployment/       # Deployment guides
+│   └── troubleshooting/  # Debug guides
+├── migrations/           # Database migrations
+└── tests/                # Test suite (115 tests)
+```
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
 
 - Node.js 18+
-- Python 3.10+
 - Supabase account
 - Anthropic API key
 
-## Setup Instructions
-
-### 1. Clone and Navigate
+### 1. Clone Repository
 
 ```bash
+git clone https://github.com/abhayypandeyy25/prd-generator.git
 cd pm-clarity
 ```
 
-### 2. Supabase Setup
+### 2. Setup Database
 
-Create a new Supabase project and run the following SQL to create tables:
+Run migrations in Supabase SQL Editor:
+- See [migrations/README.md](migrations/README.md)
+- Or follow [detailed guide](docs/deployment/MIGRATION_TEMPLATES.md)
 
 ```sql
 -- Projects table

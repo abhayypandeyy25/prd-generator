@@ -5,6 +5,7 @@
       confirmed: response?.confirmed,
       'needs-input': !response?.response && !response?.confirmed
     }"
+    :data-question-id="question.id"
   >
     <div class="question-header">
       <span class="question-id">{{ question.id }}</span>
@@ -104,6 +105,15 @@
 
       <div class="action-buttons">
         <button
+          v-if="!response?.confirmed && localResponse && localResponse.trim()"
+          class="btn btn-secondary btn-sm"
+          @click="getSmartSuggestion"
+          :disabled="suggestLoading"
+          title="Get AI suggestion based on context"
+        >
+          {{ suggestLoading ? '...' : '💡 Suggest' }}
+        </button>
+        <button
           v-if="response?.confirmed"
           class="btn btn-secondary"
           @click="unconfirm"
@@ -120,11 +130,30 @@
         </button>
       </div>
     </div>
+
+    <!-- Follow-up Questions -->
+    <FollowUpQuestions
+      v-if="response?.confirmed && followUpData"
+      :question-id="question.id"
+      :question-text="question.question"
+      :response-text="localResponse"
+      :follow-ups="followUpData.follow_ups || []"
+      :ai-follow-ups="followUpData.ai_follow_ups || []"
+      :related-questions="followUpData.related_questions || []"
+      :skipped-questions="followUpData.skip_questions || []"
+      @navigate-to-question="$emit('navigate-to-question', $event)"
+      @follow-up-saved="onFollowUpSaved"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { questionsApi } from '../services/api'
+import { useProjectStore } from '../stores/projectStore'
+import FollowUpQuestions from './FollowUpQuestions.vue'
+
+const store = useProjectStore()
 
 const props = defineProps({
   question: {
@@ -137,9 +166,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['save', 'confirm'])
+const emit = defineEmits(['save', 'confirm', 'navigate-to-question'])
 
 const localResponse = ref(props.response?.response || '')
+const followUpData = ref(null)
+const suggestLoading = ref(false)
 
 // For multiselect, parse the response as an array
 const selectedOptions = computed(() => {
@@ -184,13 +215,61 @@ const toggleOption = (option) => {
   emit('save', localResponse.value, false)
 }
 
-const confirm = () => {
+const confirm = async () => {
   emit('save', localResponse.value, true)
   emit('confirm', true)
+
+  // Fetch follow-up questions after confirming
+  if (store.currentProject?.id && localResponse.value) {
+    try {
+      const response = await questionsApi.getFollowUps(
+        store.currentProject.id,
+        props.question.id,
+        {
+          response: localResponse.value,
+          question: props.question.question,
+          include_ai: localResponse.value.length > 100  // Include AI for substantial responses
+        }
+      )
+      followUpData.value = response.data
+    } catch (error) {
+      console.error('Failed to fetch follow-ups:', error)
+    }
+  }
 }
 
 const unconfirm = () => {
   emit('confirm', false)
+  followUpData.value = null  // Clear follow-ups when editing
+}
+
+const getSmartSuggestion = async () => {
+  if (!store.currentProject?.id) return
+
+  suggestLoading.value = true
+  try {
+    const response = await questionsApi.smartSuggest(
+      store.currentProject.id,
+      props.question.id,
+      props.question.question
+    )
+
+    if (response.data?.suggested_answer) {
+      localResponse.value = response.data.suggested_answer
+      emit('save', localResponse.value, false)
+      store.showToast(`Suggestion (${response.data.confidence} confidence)`, 'success')
+    }
+  } catch (error) {
+    console.error('Smart suggest failed:', error)
+    store.showToast('Could not generate suggestion', 'error')
+  } finally {
+    suggestLoading.value = false
+  }
+}
+
+const onFollowUpSaved = (data) => {
+  // Refresh stats after saving follow-up
+  store.fetchStats()
 }
 </script>
 

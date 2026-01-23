@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { projectsApi, contextApi, questionsApi, prdApi } from '../services/api'
+import { projectsApi, contextApi, featuresApi, questionsApi, prdApi, templatesApi } from '../services/api'
 
 // Helper function to extract error message from API response
 function getErrorMessage(error, defaultMessage = 'An error occurred') {
@@ -35,6 +35,9 @@ export const useProjectStore = defineStore('project', {
     contextFiles: [],
     aggregatedContext: '',
 
+    // Features
+    features: [],
+
     // Questions
     questions: { sections: [] },
     responses: {},
@@ -48,6 +51,12 @@ export const useProjectStore = defineStore('project', {
     // PRD
     prd: null,
     prdHtml: '',
+    prdHistory: [],
+    prdMetadata: null, // { last_edited_at, is_manually_edited, original_content_md }
+
+    // Templates
+    templates: [],
+    selectedTemplate: null,
 
     // UI State
     loading: false,
@@ -88,7 +97,13 @@ export const useProjectStore = defineStore('project', {
         return state.loading && state.loadingAction === action
       }
       return state.loading
-    }
+    },
+
+    // Features getters
+    activeFeatures: (state) => state.features.filter(f => f.is_selected),
+    parkingLotFeatures: (state) => state.features.filter(f => !f.is_selected),
+    activeFeatureCount: (state) => state.features.filter(f => f.is_selected).length,
+    hasFeatures: (state) => state.features.length > 0
   },
 
   actions: {
@@ -152,6 +167,10 @@ export const useProjectStore = defineStore('project', {
 
         this.projects.unshift(response.data)
         this.currentProject = response.data
+
+        // Reset project-specific data for fresh start
+        this.resetProjectData()
+
         this.showToast('Project created successfully', 'success')
         return response.data
       } catch (error) {
@@ -178,6 +197,9 @@ export const useProjectStore = defineStore('project', {
         return
       }
 
+      // Reset all project-specific data BEFORE switching to prevent stale data
+      this.resetProjectData()
+
       this.currentProject = project
       this.setLoading(true, 'selectProject')
 
@@ -185,6 +207,7 @@ export const useProjectStore = defineStore('project', {
         // Load project data in parallel
         await Promise.allSettled([
           this.fetchContextFiles(),
+          this.fetchFeatures(),
           this.fetchResponses(),
           this.fetchStats()
         ])
@@ -497,6 +520,33 @@ export const useProjectStore = defineStore('project', {
       }
     },
 
+    // Generate PRD without triggering global loading overlay (component handles its own loading state)
+    async generatePRDWithoutLoading() {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      try {
+        const response = await prdApi.generate(this.currentProject.id)
+        this.prd = response.data?.content || ''
+        this.showToast('PRD generated successfully', 'success')
+        return response.data
+      } catch (error) {
+        console.error('Failed to generate PRD:', error)
+
+        let message = getErrorMessage(error, 'Failed to generate PRD')
+
+        // Add hint if available
+        if (error.response?.data?.hint) {
+          message += '. ' + error.response.data.hint
+        }
+
+        this.showToast(message, 'error', 5000)
+        throw error
+      }
+    },
+
     async fetchPRD() {
       if (!this.currentProject) return null
 
@@ -589,8 +639,121 @@ export const useProjectStore = defineStore('project', {
       }
     },
 
+    // PRD Editing Actions
+    async editPRD(content) {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      try {
+        const response = await prdApi.edit(this.currentProject.id, content)
+        this.prd = content
+        this.prdMetadata = {
+          last_edited_at: new Date().toISOString(),
+          is_manually_edited: true
+        }
+        return response.data
+      } catch (error) {
+        console.error('Failed to save PRD:', error)
+        const message = getErrorMessage(error, 'Failed to save PRD')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async fetchPRDHistory() {
+      if (!this.currentProject) return []
+
+      try {
+        const response = await prdApi.getHistory(this.currentProject.id)
+        // API returns { snapshots: [...], prd_id, current_content, ... }
+        const data = response.data
+        this.prdHistory = Array.isArray(data?.snapshots) ? data.snapshots : (Array.isArray(data) ? data : [])
+        if (data?.is_manually_edited !== undefined) {
+          this.prdMetadata = {
+            is_manually_edited: data.is_manually_edited,
+            last_edited_at: data.last_edited_at
+          }
+        }
+        return this.prdHistory
+      } catch (error) {
+        console.error('Failed to fetch PRD history:', error)
+        this.prdHistory = []
+        return []
+      }
+    },
+
+    async restorePRDVersion(snapshotId) {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      this.setLoading(true, 'restorePRD')
+
+      try {
+        const response = await prdApi.restore(this.currentProject.id, snapshotId)
+        // API returns { content: snapshot_content, prd_id, ... }
+        this.prd = response.data?.content || response.data?.content_md || this.prd
+        this.showToast('PRD version restored', 'success')
+        await this.fetchPRDHistory()
+        return response.data
+      } catch (error) {
+        console.error('Failed to restore PRD version:', error)
+        const message = getErrorMessage(error, 'Failed to restore version')
+        this.showToast(message, 'error')
+        throw error
+      } finally {
+        this.setLoading(false)
+      }
+    },
+
+    async savePRDVersion(versionName, changeSummary = '') {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      try {
+        const response = await prdApi.saveVersion(this.currentProject.id, versionName, changeSummary)
+        this.showToast(`Version "${versionName}" saved`, 'success')
+        await this.fetchPRDHistory()
+        return response.data
+      } catch (error) {
+        console.error('Failed to save PRD version:', error)
+        const message = getErrorMessage(error, 'Failed to save version')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async regeneratePRDSection(sectionName) {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      this.setLoading(true, 'regenerateSection')
+
+      try {
+        const response = await prdApi.regenerateSection(this.currentProject.id, sectionName)
+        // API returns { content: regenerated_prd, ... }
+        this.prd = response.data?.content || response.data?.content_md || this.prd
+        this.showToast(`Section "${sectionName}" regenerated`, 'success')
+        return response.data
+      } catch (error) {
+        console.error('Failed to regenerate section:', error)
+        const message = getErrorMessage(error, 'Failed to regenerate section')
+        this.showToast(message, 'error')
+        throw error
+      } finally {
+        this.setLoading(false)
+      }
+    },
+
     setActiveTab(tab) {
-      if (['context', 'questions', 'prd'].includes(tab)) {
+      if (['projects', 'context', 'features', 'questions', 'prd'].includes(tab)) {
         this.activeTab = tab
       }
     },
@@ -599,12 +762,197 @@ export const useProjectStore = defineStore('project', {
       this.activeSection = sectionId
     },
 
+    // Features
+    async fetchFeatures() {
+      if (!this.currentProject) return []
+
+      try {
+        const response = await featuresApi.list(this.currentProject.id)
+        this.features = Array.isArray(response.data) ? response.data : []
+        return this.features
+      } catch (error) {
+        console.error('Failed to fetch features:', error)
+        this.features = []
+        return []
+      }
+    },
+
+    async extractFeatures() {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      this.setLoading(true, 'extractFeatures')
+
+      try {
+        const response = await featuresApi.extract(this.currentProject.id)
+        await this.fetchFeatures()
+        const count = response.data?.count || 0
+        this.showToast(`Extracted ${count} features from context`, 'success')
+        return response.data
+      } catch (error) {
+        console.error('Failed to extract features:', error)
+        const message = getErrorMessage(error, 'Failed to extract features')
+        this.showToast(message, 'error', 5000)
+        throw error
+      } finally {
+        this.setLoading(false)
+      }
+    },
+
+    async createFeature(name, description = '') {
+      if (!this.currentProject) {
+        this.showToast('Please select a project first', 'error')
+        return
+      }
+
+      try {
+        const response = await featuresApi.create(this.currentProject.id, { name, description })
+        if (response.data) {
+          this.features.push(response.data)
+          this.showToast('Feature added', 'success')
+        }
+        return response.data
+      } catch (error) {
+        console.error('Failed to create feature:', error)
+        const message = getErrorMessage(error, 'Failed to create feature')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async updateFeature(featureId, data) {
+      try {
+        const response = await featuresApi.update(featureId, data)
+        if (response.data) {
+          const index = this.features.findIndex(f => f.id === featureId)
+          if (index !== -1) {
+            this.features[index] = response.data
+          }
+        }
+        return response.data
+      } catch (error) {
+        console.error('Failed to update feature:', error)
+        const message = getErrorMessage(error, 'Failed to update feature')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async toggleFeatureSelection(featureId, isSelected) {
+      try {
+        const response = await featuresApi.toggleSelect(featureId, isSelected)
+        if (response.data) {
+          const index = this.features.findIndex(f => f.id === featureId)
+          if (index !== -1) {
+            this.features[index] = response.data
+          }
+        }
+        return response.data
+      } catch (error) {
+        console.error('Failed to toggle feature selection:', error)
+        const message = getErrorMessage(error, 'Failed to update feature')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async deleteFeature(featureId) {
+      try {
+        await featuresApi.delete(featureId)
+        this.features = this.features.filter(f => f.id !== featureId)
+        this.showToast('Feature deleted', 'success')
+      } catch (error) {
+        console.error('Failed to delete feature:', error)
+        const message = getErrorMessage(error, 'Failed to delete feature')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    // Templates
+    async fetchTemplates() {
+      try {
+        const response = await templatesApi.list()
+        this.templates = Array.isArray(response.data) ? response.data : []
+        return this.templates
+      } catch (error) {
+        console.error('Failed to fetch templates:', error)
+        this.templates = []
+        return []
+      }
+    },
+
+    async getTemplate(templateId) {
+      try {
+        const response = await templatesApi.get(templateId)
+        return response.data
+      } catch (error) {
+        console.error('Failed to get template:', error)
+        throw error
+      }
+    },
+
+    setSelectedTemplate(template) {
+      this.selectedTemplate = template
+    },
+
+    async createTemplate(data) {
+      try {
+        const response = await templatesApi.create(data)
+        await this.fetchTemplates()
+        this.showToast('Template created successfully', 'success')
+        return response.data
+      } catch (error) {
+        console.error('Failed to create template:', error)
+        const message = getErrorMessage(error, 'Failed to create template')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    async cloneTemplate(templateId, name) {
+      try {
+        const response = await templatesApi.clone(templateId, name)
+        await this.fetchTemplates()
+        this.showToast('Template cloned successfully', 'success')
+        return response.data
+      } catch (error) {
+        console.error('Failed to clone template:', error)
+        const message = getErrorMessage(error, 'Failed to clone template')
+        this.showToast(message, 'error')
+        throw error
+      }
+    },
+
+    // Reset project-specific data (for switching projects or creating new)
+    resetProjectData() {
+      this.contextFiles = []
+      this.aggregatedContext = ''
+      this.features = []
+      this.responses = {}
+      this.stats = {
+        total_questions: 0,
+        answered: 0,
+        confirmed: 0,
+        completion_percentage: 0
+      }
+      this.prd = null
+      this.prdHtml = ''
+      this.prdHistory = []
+      this.prdMetadata = null
+      this.activeTab = 'context'
+      this.activeSection = this.questions.sections?.[0]?.id || null
+    },
+
     // Reset store state
     resetState() {
       this.projects = []
       this.currentProject = null
       this.contextFiles = []
       this.aggregatedContext = ''
+      this.features = []
       this.questions = { sections: [] }
       this.responses = {}
       this.stats = {
@@ -615,6 +963,10 @@ export const useProjectStore = defineStore('project', {
       }
       this.prd = null
       this.prdHtml = ''
+      this.prdHistory = []
+      this.prdMetadata = null
+      this.templates = []
+      this.selectedTemplate = null
       this.loading = false
       this.loadingAction = null
       this.error = null

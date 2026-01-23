@@ -70,10 +70,10 @@
         <h3 class="card-title">Context Summary</h3>
         <button
           class="btn btn-primary"
-          @click="goToQuestions"
+          @click="goToFeatures"
           :disabled="store.contextFiles.length === 0"
         >
-          Continue to Questions →
+          Continue to Features →
         </button>
       </div>
       <div class="card-body">
@@ -107,12 +107,16 @@
         </div>
       </div>
     </div>
+
+    <!-- Context Quality Analysis -->
+    <ContextAnalysis v-if="store.contextFiles.length > 0" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useProjectStore } from '../stores/projectStore'
+import ContextAnalysis from './ContextAnalysis.vue'
 
 const store = useProjectStore()
 
@@ -179,8 +183,8 @@ const deleteFile = async (fileId) => {
   }
 }
 
-const goToQuestions = () => {
-  store.setActiveTab('questions')
+const goToFeatures = () => {
+  store.setActiveTab('features')
 }
 </script>
 

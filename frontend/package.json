@@ -13,7 +13,8 @@
     "pinia": "^2.1.7",
     "axios": "^1.6.2",
     "marked": "^11.1.0",
-    "file-saver": "^2.0.5"
+    "file-saver": "^2.0.5",
+    "firebase": "^10.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
