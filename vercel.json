@@ -10,6 +10,14 @@
   },
   "routes": [
     {
+      "src": "/api/templates/(.*)",
+      "dest": "/api/templates.py"
+    },
+    {
+      "src": "/api/templates$",
+      "dest": "/api/templates.py"
+    },
+    {
       "src": "/api/features/(.*)",
       "dest": "/api/features.py"
     },
@@ -52,14 +60,6 @@
     {
       "src": "/api/analytics/(.*)",
       "dest": "/api/analytics.py"
-    },
-    {
-      "src": "/api/templates/(.*)",
-      "dest": "/api/templates.py"
-    },
-    {
-      "src": "/api/templates$",
-      "dest": "/api/templates.py"
     },
     {
       "src": "/api/share/(.*)",
