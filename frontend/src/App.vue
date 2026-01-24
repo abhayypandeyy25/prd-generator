@@ -1,5 +1,15 @@
 <template>
-  <div class="app-container">
+  <!-- Show AuthPage if not authenticated -->
+  <AuthPage v-if="!authStore.isAuthenticated && !authStore.loading" />
+
+  <!-- Show loading screen while checking auth -->
+  <div v-else-if="authStore.loading" class="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading PM Clarity...</p>
+  </div>
+
+  <!-- Show main app if authenticated -->
+  <div v-else class="app-container">
     <!-- Header -->
     <header class="app-header">
       <div class="header-left">
@@ -14,11 +24,19 @@
       </div>
 
       <div class="header-right">
+        <span class="user-info">{{ authStore.userDisplayName }}</span>
         <button class="btn btn-secondary" @click="showAnalytics = !showAnalytics">
           📊 Analytics
         </button>
         <button class="btn btn-primary" @click="showNewProjectModal = true">
           + New Project
+        </button>
+        <button class="btn btn-ghost" @click="handleLogout" title="Logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
         </button>
       </div>
     </header>
@@ -191,6 +209,8 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useProjectStore } from './stores/projectStore'
+import { useAuthStore } from './stores/authStore'
+import AuthPage from './components/AuthPage.vue'
 import ProjectsTab from './components/ProjectsTab.vue'
 import ContextTab from './components/ContextTab.vue'
 import FeaturesTab from './components/FeaturesTab.vue'
@@ -200,6 +220,7 @@ import TemplateSelector from './components/TemplateSelector.vue'
 import AnalyticsDashboard from './components/AnalyticsDashboard.vue'
 
 const store = useProjectStore()
+const authStore = useAuthStore()
 
 const selectedProjectId = ref('')
 const showNewProjectModal = ref(false)
@@ -215,7 +236,13 @@ const confirmationPercentage = computed(() => {
 })
 
 onMounted(async () => {
-  await loadData()
+  // Initialize authentication first
+  await authStore.initialize()
+
+  // Load data only if authenticated
+  if (authStore.isAuthenticated) {
+    await loadData()
+  }
 })
 
 const loadData = async () => {
@@ -225,6 +252,12 @@ const loadData = async () => {
 
   // Don't auto-select, start on home page
   store.setActiveTab('projects')
+}
+
+const handleLogout = async () => {
+  await authStore.signOut()
+  // Clear project store data
+  store.$reset()
 }
 
 const goHome = () => {
@@ -547,5 +580,62 @@ watch(() => store.currentProject, (project) => {
 .analytics-content .close-btn:hover {
   background: var(--gray-100);
   color: var(--gray-700);
+}
+
+/* Loading Screen */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+  color: white;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-screen p {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+/* User Info */
+.user-info {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  margin-right: 0.5rem;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  color: var(--gray-600);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
 }
 </style>

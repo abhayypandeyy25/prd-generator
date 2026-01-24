@@ -12,6 +12,36 @@ const api = axios.create({
   timeout: 300000 // 5 minutes for long-running AI operations
 })
 
+// Add request interceptor to include Firebase auth token
+api.interceptors.request.use(async (config) => {
+  // Dynamically import to avoid circular dependency
+  const { useAuthStore } = await import('../stores/authStore')
+  const authStore = useAuthStore()
+
+  const token = await authStore.getIdToken()
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+}, (error) => {
+  return Promise.reject(error)
+})
+
+// Add response interceptor to handle 401 Unauthorized
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid, sign out user
+      const { useAuthStore } = await import('../stores/authStore')
+      const authStore = useAuthStore()
+      await authStore.signOut()
+    }
+    return Promise.reject(error)
+  }
+)
+
 // Projects API
 export const projectsApi = {
   list: () => api.get('/projects'),
