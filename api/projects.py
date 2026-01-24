@@ -3,6 +3,9 @@ import json
 import os
 from supabase import create_client
 
+# Import authentication middleware
+from auth_middleware import require_auth, get_user_from_request, is_auth_enabled
+
 
 def get_supabase():
     url = os.environ.get('SUPABASE_URL')
@@ -48,28 +51,47 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_GET(self):
-        """List all projects or get single project"""
+        """List all projects or get single project (requires auth)"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             project_id = get_project_id(self.path)
             supabase = get_supabase()
 
             if project_id:
-                # Get single project
-                result = supabase.table('projects').select('*').eq('id', project_id).execute()
+                # Get single project - filter by user_id for security
+                query = supabase.table('projects').select('*').eq('id', project_id)
+                if user_id:
+                    query = query.eq('user_id', user_id)
+                result = query.execute()
+
                 if result.data:
                     self.send_json(200, result.data[0])
                 else:
                     self.send_json(404, {'error': 'Project not found'})
             else:
-                # List all projects
-                result = supabase.table('projects').select('*').order('created_at', desc=True).execute()
+                # List all projects for this user
+                query = supabase.table('projects').select('*')
+                if user_id:
+                    query = query.eq('user_id', user_id)
+                result = query.order('created_at', desc=True).execute()
                 self.send_json(200, result.data if result.data else [])
         except Exception as e:
             self.send_json(500, {'error': str(e)})
         return
 
     def do_POST(self):
-        """Create a new project"""
+        """Create a new project (requires auth)"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length)
@@ -81,7 +103,13 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             supabase = get_supabase()
-            result = supabase.table('projects').insert({'name': name}).execute()
+
+            # Include user_id when creating project
+            insert_data = {'name': name}
+            if user_id:
+                insert_data['user_id'] = user_id
+
+            result = supabase.table('projects').insert(insert_data).execute()
 
             if result.data:
                 self.send_json(201, result.data[0])
@@ -92,7 +120,13 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_DELETE(self):
-        """Delete a project"""
+        """Delete a project (requires auth)"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             project_id = get_project_id(self.path)
             if not project_id:
@@ -100,7 +134,13 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             supabase = get_supabase()
-            supabase.table('projects').delete().eq('id', project_id).execute()
+
+            # Only delete if project belongs to user
+            query = supabase.table('projects').delete().eq('id', project_id)
+            if user_id:
+                query = query.eq('user_id', user_id)
+            query.execute()
+
             self.send_json(200, {'message': 'Project deleted'})
         except Exception as e:
             self.send_json(500, {'error': str(e)})

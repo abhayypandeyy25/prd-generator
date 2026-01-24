@@ -5,6 +5,9 @@ import uuid
 import io
 from supabase import create_client
 
+# Import authentication middleware
+from auth_middleware import get_user_from_request, is_auth_enabled
+
 # File processing libraries
 try:
     from PyPDF2 import PdfReader
@@ -529,6 +532,12 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """Handle GET requests for context files"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             op, project_id, file_id = parse_path(self.path)
             supabase = get_supabase()
@@ -614,6 +623,12 @@ class handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Handle file uploads and AI analysis"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             op, project_id, file_id = parse_path(self.path)
 
@@ -713,10 +728,13 @@ class handler(BaseHTTPRequestHandler):
                         pass
 
                     file_id = str(uuid.uuid4())
-                    db_result = supabase.table('context_files').insert({
+                    insert_data = {
                         'id': file_id, 'project_id': project_id, 'file_name': filename,
                         'file_type': ext, 'file_url': file_url, 'extracted_text': extracted_text
-                    }).execute()
+                    }
+                    if user_id:
+                        insert_data['user_id'] = user_id
+                    db_result = supabase.table('context_files').insert(insert_data).execute()
 
                     if db_result.data:
                         uploaded.append({'id': file_id, 'file_name': filename, 'file_type': ext, 'text_length': len(extracted_text)})
@@ -733,6 +751,12 @@ class handler(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         """Delete a context file"""
+        # Check authentication
+        user_id = get_user_from_request(self)
+        if is_auth_enabled() and not user_id:
+            self.send_json(401, {'error': 'Unauthorized', 'message': 'Please sign in to continue'})
+            return
+
         try:
             op, _, file_id = parse_path(self.path)
 
